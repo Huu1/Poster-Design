@@ -38,12 +38,13 @@ const baseConfig = {
       // 对ts|tsx文件的处理
       {
         test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
         use: "babel-loader",
       },
       // 对图片的处理
       {
-        test: /\.(svg|png|jpg|gif)$/,
-        type: "asset/resource",
+        test: /\.(png|j?g|svg|gif)?$/,
+        use: "file-loader",
       },
     ],
   },
