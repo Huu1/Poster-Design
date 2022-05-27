@@ -1,12 +1,12 @@
 {
-  "name": "webpack5-react",
+  "name": "hy",
   "version": "1.0.0",
-  "description": "weback V5 + react ",
+  "description": "图片处理",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config ./config/webpack.config.prod.js",
-    "serve": "webpack-dev-server --config ./config/webpack.config.dev.js"
+    "start": "webpack-dev-server --config ./config/webpack.config.dev.js"
   },
   "author": "ndz",
   "license": "MIT",

@@ -14,7 +14,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": false,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "outDir": "test",
   },
-  "include": ["src"]
+  "extends": "./tsconfig.extend.json"
 }
