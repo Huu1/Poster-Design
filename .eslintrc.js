@@ -196,7 +196,6 @@ module.exports = {
       },
     ],
   },
-  endOfLine:'auto',
   // 添加共享设置
   settings: {
     react: {
