@@ -1,0 +1,24 @@
+.recommend-size-container {
+  padding: 0 20px;
+  margin-top: 1rem;
+}
+
+.recommend-size-item {
+  transition: all 0.3s ease-in-out;
+  color: #fff;
+  padding: 10px;
+  border-radius: 3px;
+  width: 100%;
+  /* font-size: 16px; */
+}
+
+.recommend-size-item:hover {
+  background: rgba(143, 153, 168, 0.15);
+}
+
+.recommend-size-item:focus-visible {
+  outline: 1px solid white;
+}
+.recommend-size-item:focus-within {
+  outline: 1px solid white;
+}

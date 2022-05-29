@@ -10,3 +10,7 @@ export type Tclip = {
   clipX: number;
   clipY: number;
 };
+
+export enum EventType {
+  photo = "photo",
+}

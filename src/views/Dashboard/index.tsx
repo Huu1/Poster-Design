@@ -7,58 +7,13 @@ import React, {
 } from "react";
 import { Layer, Rect, Stage } from "react-konva";
 import { useSize } from "ahooks";
-import { calcPosition, calculateAspectRatioFit } from "@/util/math";
-import { Tclip, TScale, TwhSize } from "./type";
+import { EventType, Tclip, TScale, TwhSize } from "./type";
 import { ScaleTool } from "@/components/ScaleTool";
-import { StageConfig } from "konva/lib/Stage";
 import Konva from "konva";
-import { useMutationObserver, useWindowResize } from "./hook";
-
-export const offsetXY = {
-  x: 20,
-  y: 80,
-};
-
-const initScale = {
-  x: 1,
-  y: 1,
-};
-const initClip = {
-  clipX: 0,
-  clipY: 0,
-};
-const calcScale = (boardSize: TwhSize, stageSize: TwhSize) => {
-  if (!stageSize || !boardSize) {
-    return initScale;
-  }
-  const { x, y } = offsetXY;
-  const ratio = calculateAspectRatioFit(
-    boardSize.width,
-    boardSize.height,
-    stageSize?.width - x,
-    stageSize?.height - y
-  );
-  const scale = {
-    x: ratio,
-    y: ratio,
-  };
-  return scale;
-};
-const calcClip = (boardSize: TwhSize, stageSize: TwhSize) => {
-  if (!stageSize || !boardSize) {
-    return initClip;
-  }
-  const clip = calcPosition(
-    stageSize.width,
-    stageSize.height,
-    boardSize.width,
-    boardSize.height
-  );
-  return {
-    clipX: clip.x,
-    clipY: clip.y,
-  };
-};
+import { useMutationObserver, useWindowResize } from "@/hooks";
+import { calcClip, calcScale, initClip, initScale, offsetXY } from "./utils";
+import { useSelector } from "react-redux";
+import { getStageState } from "@/store/feature/stage";
 
 const StageWrap = ({
   children,
@@ -81,35 +36,39 @@ const StageWrap = ({
 };
 
 const Dashboard = () => {
+  // 画板尺寸
+  const { boardSize, eventBus } = useSelector(getStageState);
+
   // 舞台wrap尺寸
   const stagewrapRef = useRef(null);
-  const stageRef = useRef<Konva.Stage | null>(null);
   const stagewrapSize = useSize(stagewrapRef) as TwhSize;
 
+  // 舞台实例
+  const stageRef = useRef<Konva.Stage | null>(null);
+
+  // 改变舞台尺寸时 是否显示滚动条
   const [isXScroll, setIsXScroll] = useState(false);
+  const [isYScroll, setIsYScroll] = useState(false);
 
   // 舞台尺寸
   const [stageSize, setStageSize] = useState({
     width: 0,
     height: 0,
   });
-  // 舞台比例
-  // const [stageScale, setStageScale] = useState<TScale>(initScale);
 
   // 画板比例
   const [scale, setScale] = useState<TScale>(initScale);
 
-  // 画板尺寸
-  const [boardSize, setBoardSize] = useState<TwhSize>({
-    width: 500,
-    height: 500,
-  });
-
   // 画板位置
   const [boardClip, setBoardClip] = useState<Tclip>(initClip);
 
+  /**
+   * stageSize 根据舞台尺寸设置 画板在舞台的比例
+   * 画板尺寸在理想状态下，根据宽高比，最大范围显示在舞台中央
+   */
   const onBoardScaleChange = useCallback(
     (stageSize: TwhSize) => {
+      console.log("change boardscale", stageSize);
       // 初始化画板在舞台尺寸的比例;
       const scale = calcScale(boardSize, stageSize);
       // 初始化画板的位置
@@ -125,44 +84,48 @@ const Dashboard = () => {
     [boardSize]
   );
 
-  // 获取stage父盒子尺寸
-  const getStageWrapDomSize = () => {
-    if (stagewrapRef.current) {
-      const { clientWidth: stageWidth, clientHeight: stageheight } =
-        stagewrapRef.current as HTMLElement;
+  // 触发onBoardScaleChange 重新计算比例
+  const resizeBoardSize = useCallback(() => {
+    // 获取stage父盒子尺寸
+    const getStageWrapDomSize = () => {
+      if (stagewrapRef.current) {
+        const { clientWidth: stageWidth, clientHeight: stageheight } =
+          stagewrapRef.current as HTMLElement;
 
+        return {
+          width: stageWidth,
+          height: stageheight,
+        };
+      }
       return {
-        width: stageWidth,
-        height: stageheight,
+        width: 0,
+        height: 0,
       };
-    }
-    return {
-      width: 0,
-      height: 0,
     };
-  };
-
-  // 初始化舞台和画板尺寸
-  useEffect(() => {
-    if (stagewrapRef.current) {
-      onBoardScaleChange(getStageWrapDomSize());
-    }
+    // 隐藏滚跳跳，获取正确的大小。
+    setIsXScroll(false);
+    setIsYScroll(false);
+    onBoardScaleChange(getStageWrapDomSize());
   }, [onBoardScaleChange]);
 
-  // 侧边栏toggle
-  useMutationObserver(() => {
-    // 获取正确的大小
-    setIsXScroll(false);
-    onBoardScaleChange(getStageWrapDomSize());
-  });
+  // 浏览器窗口大小改变
+  useWindowResize(resizeBoardSize);
 
-  // 窗口大小改变
-  useWindowResize(() => {
-    // // 获取正确的大小
-    setIsXScroll(false);
-    onBoardScaleChange(getStageWrapDomSize());
-  });
+  // 侧边栏toggle切换
+  useMutationObserver(resizeBoardSize);
 
+  useEffect(() => {
+    const photoHandle = () => {
+      console.log(123);
+    };
+    eventBus.on(EventType.photo, photoHandle);
+
+    return () => {
+      eventBus.off(EventType.photo, photoHandle);
+    };
+  }, [eventBus]);
+
+  // 根据画板比例改变 重新设置舞台尺寸
   const onScaleChange = (v: any, isResize: boolean) => {
     if (isResize) {
       // 恢复默认比例
@@ -190,6 +153,7 @@ const Dashboard = () => {
       ) {
         onBoardScaleChange(stagewrapSize);
         setIsXScroll(false);
+        setIsYScroll(false);
       }
       const clip = calcClip(
         {
@@ -212,6 +176,10 @@ const Dashboard = () => {
         // 宽度大于舞台默认时 需要增加滚动条
         setIsXScroll(true);
       }
+      if (newStageSize.height + offsetXY.y > defaultH) {
+        // 宽度大于舞台默认时 需要增加滚动条
+        setIsYScroll(true);
+      }
       onBoardScaleChange(newStageSize);
     }
   };
@@ -224,9 +192,10 @@ const Dashboard = () => {
         ref={stagewrapRef}
         id="stage-wrap"
         className={`absolute  top-0  left-0  w-full h-full  overflow-y-auto ${
-          isXScroll ? "overflow-x-auto" : "overflow-x-hidden"
-        }`}
+          isYScroll ? "overflow-y-auto" : "overflow-y-hidden"
+        } ${isXScroll ? "overflow-x-auto" : "overflow-x-hidden"}`}
       >
+        {/* 舞台 */}
         <Stage
           ref={stageRef}
           width={stageSize?.width}
@@ -240,6 +209,7 @@ const Dashboard = () => {
             clipY={boardClip.clipY}
             clipX={boardClip.clipX}
           >
+            {/* 画板 */}
             <Rect
               // ref={boardRef as React.LegacyRef<Konva.Rect>}
               x={boardClip.clipX}

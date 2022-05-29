@@ -1,6 +1,7 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import AppLayout from "@/components/Layout/pc";
+import { Spin } from "antd";
+import AppLayout from "./layout";
 
 const Home = React.lazy(() => import("./views/Dashboard"));
 
@@ -11,7 +12,7 @@ const App = () => {
         <Route path="/" element={<AppLayout />}>
           <Route
             index
-            // element={<Suspense fallback={<></>}>{<Home />}</Suspense>}
+            // element={<Suspense fallback={<Spin></Spin>}>{<Home />}</Suspense>}
             element={<Home />}
           />
         </Route>

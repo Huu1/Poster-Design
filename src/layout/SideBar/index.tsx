@@ -4,6 +4,8 @@ import IconFont from "@/components/Iconfont";
 
 import "./index.css";
 import Toggle from "./toggle";
+import BoardSize from "../BoardSize";
+import Photos from "../Photos";
 // import Layers from "./Layers";
 // import Photos from "./Photos";
 // import Texts from "./Texts";
@@ -41,16 +43,16 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="flex h-full bg-primary" id="memu-side-bar" ref={ref}>
+    <div className="flex h-full bg-primary " id="memu-side-bar" ref={ref}>
       <div
-        className="bg-primary flex flex-col side-left-menu"
+        className="bg-primary flex flex-col side-left-menu overflow-hidden"
         style={{ width: `${LEFT_WIDTH}px` }}
       >
         {sideMemu.map((item) => {
           return (
             <div
               key={item.value}
-              className={`flex flex-col justify-center 	items-center cursor-pointer	side-menu ${
+              className={`flex flex-col justify-center 	items-center cursor-pointer overflow-hidden	side-menu select-none ${
                 checked === item.value ? "side-menu-checked" : ""
               }`}
               onClick={() => toggle(item.value)}
@@ -71,15 +73,15 @@ const Sidebar = () => {
           padding: "10px",
         }}
       >
-        {/* <BoardSize
+        <BoardSize
           style={{ display: checked === enumMenu.size ? "" : "none" }}
         />
 
         <Photos style={{ display: checked === enumMenu.photo ? "" : "none" }} />
 
-        <Texts style={{ display: checked === enumMenu.text ? "" : "none" }} />
+        {/* <Texts style={{ display: checked === enumMenu.text ? "" : "none" }} />
 
-        <Layers style={{ display: checked === enumMenu.layer ? "" : "none" }} /> */}
+        <Layers style={{ display: checked === enumMenu.layer ? "" : "none" }} />  */}
 
         <Toggle onClickHandle={toggle} />
       </div>

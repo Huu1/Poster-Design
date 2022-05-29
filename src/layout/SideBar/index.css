@@ -5,6 +5,7 @@
   border-radius: 5px;
   margin-bottom: 5px;
   transition: all 0.2s ease-in-out;
+  width: 50px;
 }
 
 .side-menu:hover {

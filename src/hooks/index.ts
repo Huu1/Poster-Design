@@ -19,15 +19,15 @@ export const useMutationObserver = (
     const observer = observerSideDom();
 
     return () => observer?.disconnect();
-  }, []);
+  }, [fn]);
 };
 
 export const useWindowResize = (fn: () => void) => {
   useEffect(() => {
-    window.addEventListener("resize", fn);
     fn();
+    window.addEventListener("resize", fn);
     return () => {
       window.removeEventListener("resize", fn);
     };
-  }, []);
+  }, [fn]);
 };

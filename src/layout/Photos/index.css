@@ -1,0 +1,71 @@
+.masonry {
+  /* width: 100%;
+  columns: 2;
+  column-gap: 2px; */
+  padding: 0 10px;
+}
+
+/* .masonry .item {
+  width: 100%;
+  break-inside: avoid;
+  margin-bottom: 2px;
+  padding: 4px;
+}
+
+.masonry .item img {
+  border-radius: 4px;
+  overflow: hidden;
+  width: 100%;
+} */
+
+.my-masonry-grid {
+  display: -webkit-box; /* Not needed if autoprefixing */
+  display: -ms-flexbox; /* Not needed if autoprefixing */
+  display: flex;
+  margin-left: -10px; /* gutter size offset */
+  width: auto;
+  padding: 0 10px;
+}
+.my-masonry-grid_column {
+  background-clip: padding-box;
+}
+.my-masonry-grid_column + .my-masonry-grid_column {
+  padding-left: 10px; /* gutter size */
+}
+
+/* Style your items */
+.my-masonry-grid_column .item {
+  margin-bottom: 10px;
+  position: relative;
+}
+.my-masonry-grid_column .item .info {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 5px;
+  font-size: 10px;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.4),
+    rgba(0, 0, 0, 0.6)
+  );
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+}
+.my-masonry-grid_column .item .info span {
+  color: #8abbff;
+}
+.my-masonry-grid_column .item .info span:hover {
+  text-decoration: underline;
+}
+
+.my-masonry-grid_column .item:hover .info {
+  opacity: 1;
+}
+
+.my-masonry-grid_column .item img {
+  border-radius: 4px;
+  overflow: hidden;
+}

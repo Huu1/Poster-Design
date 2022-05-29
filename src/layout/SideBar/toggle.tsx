@@ -4,7 +4,7 @@ const Toggle = (props: { onClickHandle: () => void }) => {
   return (
     <div
       onClick={() => props?.onClickHandle()}
-      className="absolute top-1/2"
+      className="absolute top-1/2 select-none"
       style={{ right: "-12px", zIndex: 1, transform: "translateY(-50%)" }}
     >
       <svg
