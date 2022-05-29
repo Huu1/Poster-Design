@@ -1,80 +1,29 @@
-import React from 'react';
-import GlobalError from './GlobalError';
-import ViewError from './ViewError';
+import React, { ErrorInfo } from "react";
 
-type ErrComType = 'view' | 'global';
-
-interface IErrorBoundaryProps {
-  type: ErrComType;
-  message?: string;
-  isDialog?: boolean;
-}
-
-interface State {
-  hasError: boolean;
-  error?: any;
-}
-
-export default class ErrorBoundary extends React.Component<IErrorBoundaryProps, State> {
-  static defaultProps: IErrorBoundaryProps = {
-    type: 'global',
-    message: '页面崩溃啦！',
-    isDialog: false,
-  };
-
-  constructor(props) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export class ErrorBoundary extends React.Component<any, any> {
+  constructor(props: unknown) {
     super(props);
-    this.state = {
-      hasError: false,
-    };
+    this.state = { hasError: false };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  static getDerivedStateFromError(_error: Error) {
-    return { hasError: true };
+  static getDerivedStateFromError(error: unknown) {
+    return { hasError: true, error };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-  componentDidCatch(error: any, errorInfo: any) {
-    console.log('ErrorBoundary', error, errorInfo);
-    this.setState({
-      error,
-    });
-    //TODO 上报错误日志
-  }
-
-  getErrorComponent(type: ErrComType) {
-    switch (type) {
-      case 'view':
-        return ViewError;
-      default:
-        return GlobalError;
-    }
-  }
-
-  renderErrorComponent() {
-    // const { message } = this.props;
-    // const { error } = this.state;
-    // const Com = this.getErrorComponent(type);
-
-    return <div>123</div>;
-    //return this.getErrorComponent()
-    // return <Com message={props.message} />;
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    // 你同样可以将错误日志上报给服务器
+    // logErrorToMyService(error, errorInfo);
+    console.log(error, errorInfo);
   }
 
   render() {
-    if (this.state.hasError) {
-      return this.renderErrorComponent();
+    const { hasError, error } = this.state;
+    if (hasError) {
+      // 你可以自定义降级后的 UI 并渲染
+      return <h1>{error.message}</h1>;
     }
+
     return this.props.children;
   }
-}
-
-export function withErrorBoundary<T>(Com: any, options: IErrorBoundaryProps & T) {
-  return (props: any) => (
-    <ErrorBoundary {...options}>
-      <Com {...props} />
-    </ErrorBoundary>
-  );
 }

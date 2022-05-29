@@ -27,7 +27,9 @@ module.exports = {
     {
       files: ["*.ts", "*.tsx"],
       rules: {
-        "@typescript-eslint/no-unused-vars": [1, { args: "none" }],
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": ["off"],
+        "@typescript-eslint/no-explicit-any": ["off"],
       },
     },
   ],
@@ -35,6 +37,7 @@ module.exports = {
   rules: {
     // 语句强制分号结尾
     semi: [2, "always"],
+    quotes: "off",
     // 布尔值类型的 propTypes 的 name 必须为 is 或 has 开头 （off 不强制要求写 propTypes）
     "react/boolean-prop-naming": "off",
     // 一个 defaultProps 必须有对应的 propTypes （）
@@ -143,6 +146,7 @@ module.exports = {
         },
       },
     ],
+    "prettier/prettier": ["error", { endOfLine: "auto" }],
     // @fixable props 与 value 之间的等号前后禁止有空格
     "react/jsx-equals-spacing": ["error", "never"],
     // 限制文件后缀

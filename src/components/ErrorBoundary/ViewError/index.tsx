@@ -1,5 +1,5 @@
-import React from 'react';
-import './index.scss';
+import React from "react";
+import "./index.less";
 
 export interface IViewErrorProps {
   message?: string;
@@ -7,7 +7,7 @@ export interface IViewErrorProps {
 
 const onReload = (e: React.MouseEvent) => {
   e.preventDefault();
-  window.location.href = window.location.href.split('#')[0];
+  window.location.href = window.location.href.split("#")[0];
 };
 
 const ViewError: React.FC<IViewErrorProps> = ({ message }) => (
@@ -24,7 +24,7 @@ const ViewError: React.FC<IViewErrorProps> = ({ message }) => (
 );
 
 ViewError.defaultProps = {
-  message: '加载失败,请重试!',
+  message: "加载失败,请重试!",
 };
 
 export default ViewError;
