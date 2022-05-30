@@ -48,14 +48,17 @@ const Photos = ({ style }: sideProps) => {
 
   const onDragStart = (
     e: React.DragEvent<HTMLImageElement>,
-    src: string,
+    url: string,
     item: any
   ) => {
     const { width, height } = item;
 
     e.dataTransfer.setData(
       "text/plain",
-      Math.round((1080 * height) / width) + splitCode + src
+      JSON.stringify({
+        height: Math.round((1080 * height) / width),
+        url,
+      })
     );
   };
 

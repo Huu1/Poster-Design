@@ -102,7 +102,7 @@ const Dashboard = () => {
         height: 0,
       };
     };
-    // 隐藏滚跳跳，获取正确的大小。
+    // 隐藏滚东条，获取正确的大小。
     setIsXScroll(false);
     setIsYScroll(false);
     onBoardScaleChange(getStageWrapDomSize());
@@ -184,6 +184,25 @@ const Dashboard = () => {
     }
   };
 
+  const onDropHandle = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    console.log(e);
+    const { height, url } = JSON.parse(e.dataTransfer?.getData("text/plain"));
+
+    const a = 2322223222222222;
+    // register event position
+    // stageRef.current.setPointersPositions(e);
+    // // add image
+    // setImages(
+    //   images.concat([
+    //     {
+    //       ...stageRef.current.getPointerPosition(),
+    //       src: dragUrl.current,
+    //     },
+    //   ])
+    // );
+  };
+
   return (
     <StageWrap
       childrenTool={<ScaleTool value={scale.x} onChange={onScaleChange} />}
@@ -196,37 +215,43 @@ const Dashboard = () => {
         } ${isXScroll ? "overflow-x-auto" : "overflow-x-hidden"}`}
       >
         {/* 舞台 */}
-        <Stage
-          ref={stageRef}
-          width={stageSize?.width}
-          height={stageSize?.height}
-          className="stage-class"
+        <div
+          className="relavite"
+          onDrop={onDropHandle}
+          onDragOver={(e) => e.preventDefault()}
         >
-          <Layer
-            // ref={layerRef as React.LegacyRef<Konva.Layer>}
-            clipHeight={boardSize.height * scale.y}
-            clipWidth={boardSize.width * scale.x}
-            clipY={boardClip.clipY}
-            clipX={boardClip.clipX}
+          <Stage
+            ref={stageRef}
+            width={stageSize?.width}
+            height={stageSize?.height}
+            className="stage-class"
           >
-            {/* 画板 */}
-            <Rect
-              // ref={boardRef as React.LegacyRef<Konva.Rect>}
-              x={boardClip.clipX}
-              y={boardClip.clipY}
-              width={boardSize.width}
-              height={boardSize.height}
-              fill={"white"}
-              strokeWidth={8} // border width: ;
-              stroke="#E0E2E6" // border color
-              name="background"
-              scale={{
-                x: scale.x,
-                y: scale.y,
-              }}
-            />
-          </Layer>
-        </Stage>
+            <Layer
+              // ref={layerRef as React.LegacyRef<Konva.Layer>}
+              clipHeight={boardSize.height * scale.y}
+              clipWidth={boardSize.width * scale.x}
+              clipY={boardClip.clipY}
+              clipX={boardClip.clipX}
+            >
+              {/* 画板 */}
+              <Rect
+                // ref={boardRef as React.LegacyRef<Konva.Rect>}
+                x={boardClip.clipX}
+                y={boardClip.clipY}
+                width={boardSize.width}
+                height={boardSize.height}
+                fill={"white"}
+                strokeWidth={8} // border width: ;
+                stroke="#E0E2E6" // border color
+                name="background"
+                scale={{
+                  x: scale.x,
+                  y: scale.y,
+                }}
+              />
+            </Layer>
+          </Stage>
+        </div>
       </div>
     </StageWrap>
   );

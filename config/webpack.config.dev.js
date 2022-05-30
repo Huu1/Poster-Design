@@ -1,3 +1,5 @@
+const ReactRefreshPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+
 // 合并规则
 const { merge } = require("webpack-merge");
 // 错误提示插件
@@ -18,13 +20,26 @@ module.exports = merge(baseConfig, {
     // 端口
     port: 8080,
     // 热更新
-    hot: true,
+    // hot: true,
 
     // 启动时打开浏览器
     open: true,
   },
+  module: {
+    rules: [
+      {
+        test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
+        loader: "babel-loader",
+        options: {
+          plugins: [require.resolve("react-refresh/babel")], // react-refresh 添加
+        },
+      },
+    ],
+  },
   // 插件配置
   plugins: [
+    new ReactRefreshPlugin(), // react-refresh 添加
     new FriendlyErrorsWebpackPlugin(),
     new ESLintPlugin({
       fix: true,
