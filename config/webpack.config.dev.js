@@ -32,14 +32,14 @@ module.exports = merge(baseConfig, {
         exclude: /node_modules/,
         loader: "babel-loader",
         options: {
-          plugins: [require.resolve("react-refresh/babel")], // react-refresh 添加
+          plugins: [require.resolve("react-refresh/babel")],
         },
       },
     ],
   },
   // 插件配置
   plugins: [
-    new ReactRefreshPlugin(), // react-refresh 添加
+    new ReactRefreshPlugin(),
     new FriendlyErrorsWebpackPlugin(),
     new ESLintPlugin({
       fix: true,

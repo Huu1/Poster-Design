@@ -1,7 +1,8 @@
-import React, { Suspense, useEffect } from "react";
+import React, { Suspense, useContext, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { Spin } from "antd";
 import AppLayout from "./layout";
+import { AppCtx } from "./reducer";
 
 const Home = React.lazy(() => import("./views/Dashboard"));
 

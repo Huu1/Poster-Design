@@ -8,6 +8,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import store from "./store";
 import { Provider } from "react-redux";
+import { AppContext } from "./reducer";
 
 const container = document.getElementById("root");
 if (!container) throw new Error("Failed to find the root element");
@@ -15,12 +16,14 @@ const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <ErrorBoundary>
-          <App />
-        </ErrorBoundary>
-      </BrowserRouter>
-    </Provider>
+    <BrowserRouter>
+      <Provider store={store}>
+        <AppContext>
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
+        </AppContext>
+      </Provider>
+    </BrowserRouter>
   </React.StrictMode>
 );

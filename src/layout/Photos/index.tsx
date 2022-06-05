@@ -8,6 +8,7 @@ import { sideProps } from "../BoardSize";
 import { getStageState } from "@/store/feature/stage";
 import { useSelector } from "react-redux";
 import { EventType } from "@/views/Dashboard/type";
+import { getUnsplashImage } from "@/services";
 
 export const splitCode = "*&***&*";
 
@@ -21,14 +22,7 @@ const Photos = ({ style }: sideProps) => {
       return;
     }
     setLoading(true);
-
-    axios({
-      method: "get",
-      url: "https://api.unsplash.com/photos/random?count=40",
-      headers: {
-        Authorization: "Client-ID g0hjw__H3OZAnfkzXMs4GpZZ9MvTmLsRzRufJMQnljI",
-      },
-    })
+    getUnsplashImage()
       .then((res: any) => {
         if (res.status === 200) {
           setData((data) => {
@@ -38,6 +32,9 @@ const Photos = ({ style }: sideProps) => {
         } else {
           message.error("图片加载失败");
         }
+      })
+      .catch((error) => {
+        message.error(error.toString());
       })
       .finally(() => setLoading(false));
   };
@@ -65,10 +62,14 @@ const Photos = ({ style }: sideProps) => {
   const onClickHandle = (img: any) => {
     eventBus.emit(EventType.photo, img);
   };
-
   return (
     <div className="h-full" style={{ ...style }}>
-      <div style={{ height: "40px" }}>Photos by Unsplash</div>
+      <div
+        className="text-center"
+        style={{ height: "40px", lineHeight: "25px" }}
+      >
+        Photos by Unsplash
+      </div>
       <div
         id="scrollableDiv"
         className="flex-1"
@@ -94,7 +95,7 @@ const Photos = ({ style }: sideProps) => {
               return (
                 <div
                   key={index}
-                  className="item"
+                  className="item select-none"
                   onClick={() => onClickHandle(item)}
                 >
                   <img

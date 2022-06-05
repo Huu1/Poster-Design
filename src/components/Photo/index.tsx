@@ -2,6 +2,9 @@ import React, { useEffect, useRef } from "react";
 import Konva from "konva";
 import { Image, Rect } from "react-konva";
 import useImage from "use-image";
+import { useSelector } from "react-redux";
+import { getStageState } from "@/store/feature/stage";
+import { TOffset, TScale } from "@/views/Dashboard/type";
 
 // function getCrop(
 //   image: any,
@@ -40,17 +43,31 @@ import useImage from "use-image";
 //   };
 // }
 
-const Photo = () => {
-  const [image, status] = useImage("");
+const Photo = ({
+  shapeProps,
+  scale,
+  isSelected,
+  onSelect,
+  onChange,
+}: {
+  shapeProps: Konva.ImageConfig;
+  scale: TScale;
+  isSelected?: boolean;
+  onSelect?: (elementConfig: Konva.ImageConfig) => void;
+  onChange?: (elementConfig: Konva.ImageConfig) => void;
+}) => {
+  const [image, status] = useImage(shapeProps.src);
   const shapeRef = useRef<Konva.Image>();
 
   useEffect(() => {
-    // if (status === "loading") {
-    //   onSelect(id + loadingSufix);
-    // } else if (status === "loaded") {
-    //   onSelect();
-    // }
-  }, [status]);
+    if (status === "loading") {
+      // onSelect(id + loadingSufix);
+    } else if (status === "loaded" && image && shapeProps) {
+      // const offsetX = image.width / 2;
+      // const offsetY = image.height / 2;
+      // onChange?.({ ...shapeProps, offsetX, offsetY });
+    }
+  }, [status, image]);
 
   // function applyCrop(pos: string | undefined) {
   //   const img = shapeRef.current as Konva.Image;
@@ -78,11 +95,16 @@ const Photo = () => {
       </>
     );
   }
-
   return (
     <Image
       image={image}
+      scale={scale}
       ref={shapeRef as React.LegacyRef<Konva.Image>}
+      x={shapeProps.x}
+      y={shapeProps.y}
+      // I will use offset to set origin to the center of the image
+      offsetX={image ? image.width / 2 : 0}
+      offsetY={image ? image.height / 2 : 0}
       // onClick={onSelect}
       // onTap={onSelect}
       // onMouseDown={onSelect}

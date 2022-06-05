@@ -1,14 +1,14 @@
 {
-  "name": "hy",
+  "name": "pd",
   "version": "1.0.0",
-  "description": "图片处理",
+  "description": "Poster Design",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config ./config/webpack.config.prod.js",
     "start": "webpack server --config ./config/webpack.config.dev.js "
   },
-  "author": "ndz",
+  "author": "hy",
   "license": "MIT",
   "dependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
@@ -16,11 +16,14 @@
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.5",
     "@types/react-modal": "^3.13.1",
+    "@types/uuid": "^8.3.4",
     "ahooks": "^3.4.0",
     "antd": "^4.19.3",
     "axios": "^0.24.0",
     "events": "^3.3.0",
+    "i": "^0.3.7",
     "konva": "^8.3.8",
+    "npm": "^8.11.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-infinite-scroll-component": "^6.1.0",
@@ -31,7 +34,8 @@
     "react-refresh": "^0.13.0",
     "react-router-dom": "6",
     "style-loader": "^3.3.1",
-    "use-image": "^1.0.12"
+    "use-image": "^1.0.12",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",

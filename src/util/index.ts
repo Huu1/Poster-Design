@@ -42,3 +42,19 @@ export function isMobile() {
   }
   return false;
 }
+
+export const resizePos = (
+  x1: number,
+  y1: number,
+  srcSize: any[],
+  tarSize: any[]
+) => {
+  // const w1 = srcSize[0];
+  // const h1 = srcSize[1];
+  // const y2 = (h2 / h1) * y1;
+  // const x2 = (w2 / w1) * x1;
+  // return {
+  //   x: x2,
+  //   y: y2,
+  // };
+};

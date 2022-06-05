@@ -1,10 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export const useMutationObserver = (
   fn: () => void,
   domId = "memu-side-bar"
 ) => {
   useEffect(() => {
+    console.log("resize");
     const observerSideDom = () => {
       const config = { attributes: true };
       const callback = function () {
@@ -24,6 +25,7 @@ export const useMutationObserver = (
 
 export const useWindowResize = (fn: () => void) => {
   useEffect(() => {
+    console.log("resize");
     fn();
     window.addEventListener("resize", fn);
     return () => {
@@ -31,3 +33,11 @@ export const useWindowResize = (fn: () => void) => {
     };
   }, [fn]);
 };
+
+export function usePrevious(value: any) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}

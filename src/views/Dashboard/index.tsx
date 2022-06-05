@@ -7,13 +7,29 @@ import React, {
 } from "react";
 import { Layer, Rect, Stage } from "react-konva";
 import { useSize } from "ahooks";
-import { EventType, Tclip, TScale, TwhSize } from "./type";
+import { EventType, Tclip, TOffset, TScale, TwhSize } from "./type";
 import { ScaleTool } from "@/components/ScaleTool";
 import Konva from "konva";
-import { useMutationObserver, useWindowResize } from "@/hooks";
-import { calcClip, calcScale, initClip, initScale, offsetXY } from "./utils";
-import { useSelector } from "react-redux";
-import { getStageState } from "@/store/feature/stage";
+import { useMutationObserver, usePrevious, useWindowResize } from "@/hooks";
+import {
+  calcClip,
+  calcScale,
+  initClip,
+  initScale,
+  innerWtihOuterBoxRatio,
+  offsetXY,
+} from "./utils";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getStageState,
+  resetElements,
+  setBoardScale,
+  setElements,
+} from "@/store/feature/stage";
+import Photo from "@/components/Photo";
+import { ImageConfig } from "konva/lib/shapes/Image";
+import { v4 } from "uuid";
+import { resizePos } from "@/util";
 
 const StageWrap = ({
   children,
@@ -37,7 +53,9 @@ const StageWrap = ({
 
 const Dashboard = () => {
   // 画板尺寸
-  const { boardSize, eventBus } = useSelector(getStageState);
+  const { boardSize, eventBus, shapeElements, scale } =
+    useSelector(getStageState);
+  const dispatch = useDispatch();
 
   // 舞台wrap尺寸
   const stagewrapRef = useRef(null);
@@ -55,9 +73,6 @@ const Dashboard = () => {
     width: 0,
     height: 0,
   });
-
-  // 画板比例
-  const [scale, setScale] = useState<TScale>(initScale);
 
   // 画板位置
   const [boardClip, setBoardClip] = useState<Tclip>(initClip);
@@ -78,8 +93,9 @@ const Dashboard = () => {
       };
       const clip = calcClip(scaleBoardSize, stageSize) as Tclip;
       setStageSize(stageSize);
-      setScale(scale);
       setBoardClip(clip);
+      dispatch(setBoardScale(scale));
+      return { clip, scale, stageSize };
     },
     [boardSize]
   );
@@ -151,10 +167,20 @@ const Dashboard = () => {
         newStageSize.width + offsetXY.x > defaultW ||
         newStageSize.height + offsetXY.y > defaultH
       ) {
-        onBoardScaleChange(stagewrapSize);
+        setStageSize(newStageSize);
         setIsXScroll(false);
         setIsYScroll(false);
       }
+
+      // 设置新比例
+      dispatch(
+        setBoardScale({
+          x: newBScale,
+          y: newBScale,
+        })
+      );
+
+      // 计算clip
       const clip = calcClip(
         {
           width: newBW,
@@ -162,12 +188,26 @@ const Dashboard = () => {
         },
         stagewrapSize
       );
-      setScale({
-        x: newBScale,
-        y: newBScale,
-      });
-
       setBoardClip(clip);
+
+      // 重置元素xy
+      const resizeElements = () => {
+        return [...shapeElements].map((item) => {
+          const r = innerWtihOuterBoxRatio(
+            item.x as number,
+            item.y as number,
+            boardClip.clipX,
+            boardClip.clipY,
+            boardSize.width * scale.x,
+            boardSize.height * scale.y
+          );
+          const result = { ...item };
+          result.x = clip.clipX + boardSize.width * newBScale * r.x;
+          result.y = clip.clipY + boardSize.height * newBScale * r.y;
+          return result;
+        });
+      };
+      dispatch(setElements(resizeElements()));
     } else {
       // 宽高有一个大于舞台尺寸，改变舞台尺寸
       newStageSize.width = Math.max(newBW + offsetXY.x, defaultW);
@@ -184,23 +224,51 @@ const Dashboard = () => {
     }
   };
 
+  // useEffect(() => {}, [boardClip, scale, boardSize]);
+
   const onDropHandle = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    console.log(e);
+    // register event position
+    stageRef.current?.setPointersPositions(e);
     const { height, url } = JSON.parse(e.dataTransfer?.getData("text/plain"));
 
-    const a = 2322223222222222;
-    // register event position
-    // stageRef.current.setPointersPositions(e);
-    // // add image
-    // setImages(
-    //   images.concat([
-    //     {
-    //       ...stageRef.current.getPointerPosition(),
-    //       src: dragUrl.current,
-    //     },
-    //   ])
-    // );
+    const pos = stageRef.current?.getPointerPosition() as TScale;
+
+    dispatch(
+      setElements(
+        // // add image
+        shapeElements.concat([
+          {
+            ...pos,
+            src: url,
+            height,
+            type: "image",
+            image: "",
+            id: v4(),
+          },
+        ])
+      )
+    );
+  };
+
+  const renderElement = () => {
+    return shapeElements.map((item, index: number) => {
+      if (item.type === "image") {
+        return (
+          <Photo
+            onChange={(photo) => {
+              const rects = shapeElements.slice();
+              rects[index] = photo;
+              dispatch(setElements(rects));
+            }}
+            key={item.id}
+            shapeProps={item as ImageConfig}
+            scale={scale}
+          />
+        );
+      }
+      return <></>;
+    });
   };
 
   return (
@@ -244,11 +312,9 @@ const Dashboard = () => {
                 strokeWidth={8} // border width: ;
                 stroke="#E0E2E6" // border color
                 name="background"
-                scale={{
-                  x: scale.x,
-                  y: scale.y,
-                }}
+                scale={scale}
               />
+              {renderElement()}
             </Layer>
           </Stage>
         </div>

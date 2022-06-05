@@ -55,3 +55,17 @@ export const fitStageSize = (widths: number, heights: number) => {
     height,
   };
 };
+
+export function innerWtihOuterBoxRatio(
+  cx: number,
+  cy: number,
+  ox: number,
+  oy: number,
+  width: number,
+  height: number
+) {
+  return {
+    x: (cx - ox) / width,
+    y: (cy - oy) / height,
+  };
+}
