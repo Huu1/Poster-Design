@@ -11,8 +11,7 @@ import {
 } from "@ant-design/icons";
 
 import "./index.css";
-import { useDispatch, useSelector } from "react-redux";
-import { getStageState, setBoardSize } from "@/store/feature/stage";
+import { AppCtx, Atype } from "@/reducer";
 
 export type sideProps = {
   style: React.CSSProperties;
@@ -72,20 +71,27 @@ const recommendSizeList = [
 ];
 
 const BoardSize = ({ style }: sideProps) => {
-  const { boardSize } = useSelector(getStageState);
-
-  const dispatch = useDispatch();
+  const {
+    state: { boardSize, oldBoardSize },
+    dispatch,
+  } = React.useContext(AppCtx)!;
 
   const onChange = (type: string, val: number) => {
     const size = {
       width: type === "width" ? val : boardSize.width,
       height: type === "height" ? val : boardSize.height,
     };
-    dispatch(setBoardSize(size));
+    dispatch({
+      type: Atype.boardSize,
+      payload: size,
+    });
   };
 
   const handleClick = (size: { height: number; width: number }) => {
-    dispatch(setBoardSize(size));
+    dispatch({
+      type: Atype.boardSize,
+      payload: size,
+    });
   };
   return (
     <div style={style}>

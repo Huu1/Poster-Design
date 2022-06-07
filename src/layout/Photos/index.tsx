@@ -45,16 +45,23 @@ const Photos = ({ style }: sideProps) => {
 
   const onDragStart = (
     e: React.DragEvent<HTMLImageElement>,
-    url: string,
-    item: any
+    item: { width: number; height: number; urls: { raw: string } }
   ) => {
-    const { width, height } = item;
+    // item.urls.raw + '&&fm=jpg&w=600&fit=max"'
+    const fixWidth = 400;
+    const urlParam = `&&fm=jpg&w=${fixWidth}&fit=max`;
+    const {
+      width,
+      height,
+      urls: { raw },
+    } = item;
 
     e.dataTransfer.setData(
       "text/plain",
       JSON.stringify({
-        height: Math.round((1080 * height) / width),
-        url,
+        height: Math.round((fixWidth * height) / width),
+        width: fixWidth,
+        url: raw + urlParam,
       })
     );
   };
@@ -102,7 +109,7 @@ const Photos = ({ style }: sideProps) => {
                     src={item.urls.small}
                     alt=""
                     draggable
-                    onDragStart={(e) => onDragStart(e, item.urls.regular, item)}
+                    onDragStart={(e) => onDragStart(e, item)}
                   />
                   <div className="info text-center">
                     Photo by <span>{item.user.name}</span> on
