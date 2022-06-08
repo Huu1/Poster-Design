@@ -58,9 +58,6 @@ const Dashboard = () => {
   // 画板尺寸
   const { boardSize, eventBus, shapeElements, scale, boardClip, selectedId } =
     state;
-  // const { boardSize, eventBus, shapeElements, scale } =
-  //   useSelector(getStageState);
-  // const dispatch = useDispatch();
 
   // 舞台wrap尺寸
   const stagewrapRef = useRef(null);
@@ -276,9 +273,12 @@ const Dashboard = () => {
         return (
           <Photo
             onChange={(photo) => {
-              // const rects = shapeElements.slice();
-              // rects[index] = photo;
-              // dispatch(setElements(rects));
+              const rects = shapeElements.slice();
+              rects[index] = photo;
+              dispatch({
+                type: Atype.shapeElements,
+                payload: rects,
+              });
             }}
             onSelect={(shapeRef) => {
               dispatch({
@@ -359,6 +359,8 @@ const Dashboard = () => {
                 scale={scale}
               />
               {renderElement()}
+            </Layer>
+            <Layer>
               {selectedId && (
                 <Transformer
                   ref={trRef as React.LegacyRef<Konva.Transformer>}
