@@ -7314,6 +7314,11 @@ react-modal@^3.15.1:
     react-lifecycles-compat "^3.0.0"
     warning "^4.0.3"
 
+react-movable@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.npmmirror.com/react-movable/-/react-movable-3.0.4.tgz#f55778696c79f9216368038632a365be2cf8ccd2"
+  integrity sha512-rIbzl62O7cr7n//GjZMnQ+nWuu2QZI3Mnkm8P0Y4A5Qadt24BKvimlt1kzoxFzJ+Gk2+ZwpM4ZLQUVvKzGjsCw==
+
 react-reconciler@~0.28.0:
   version "0.28.0"
   resolved "https://registry.npmmirror.com/react-reconciler/-/react-reconciler-0.28.0.tgz#52ede33c584c9b6d4c9bea02a53d368c5751c9c9"

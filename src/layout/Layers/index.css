@@ -1,0 +1,27 @@
+.layer-container {
+}
+
+.layer-item {
+  padding: 5px;
+}
+
+.layer-selected {
+  background-color: rgba(0, 161, 255, 0.2) !important;
+}
+
+.layer-icon {
+  color: #abb3bf;
+}
+
+.layer-input input {
+  background-color: #383e47;
+  padding: 3px 4px;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  height: 28px;
+}
+.layer-input input:focus {
+  outline: auto;
+}

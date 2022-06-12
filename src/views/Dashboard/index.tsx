@@ -255,6 +255,7 @@ const Dashboard = () => {
         src: url,
         type: "image",
         draggable: true,
+        visible: true,
         height,
         width,
         id: v4(),
@@ -313,6 +314,11 @@ const Dashboard = () => {
     }
   };
 
+  const selectElement = useMemo(
+    () => shapeElements.find((i) => i.id === selectedId),
+    [selectedId, shapeElements]
+  );
+
   return (
     <StageWrap
       childrenTool={<ScaleTool value={scale.x} onChange={onScaleChange} />}
@@ -364,6 +370,8 @@ const Dashboard = () => {
               {selectedId && (
                 <Transformer
                   ref={trRef as React.LegacyRef<Konva.Transformer>}
+                  visible={selectElement?.draggable && selectElement?.visible}
+                  borderStrokeWidth={3}
                   boundBoxFunc={(oldBox, newBox) => {
                     // limit resize
                     if (newBox.width < 5 || newBox.height < 5) {

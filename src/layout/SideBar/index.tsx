@@ -6,6 +6,7 @@ import "./index.css";
 import Toggle from "./toggle";
 import BoardSize from "../BoardSize";
 import Photos from "../Photos";
+import Layers from "../Layers";
 // import Layers from "./Layers";
 // import Photos from "./Photos";
 // import Texts from "./Texts";
@@ -79,9 +80,9 @@ const Sidebar = () => {
 
         <Photos style={{ display: checked === enumMenu.photo ? "" : "none" }} />
 
-        {/* <Texts style={{ display: checked === enumMenu.text ? "" : "none" }} />
+        {/* <Texts style={{ display: checked === enumMenu.text ? "" : "none" }} /> */}
 
-        <Layers style={{ display: checked === enumMenu.layer ? "" : "none" }} />  */}
+        <Layers style={{ display: checked === enumMenu.layer ? "" : "none" }} />
 
         <Toggle onClickHandle={toggle} />
       </div>
